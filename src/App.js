@@ -9,14 +9,24 @@ import Map from './components/Map/Map'
 
 const App = () => {
     const [places, setPlaces] = useState([])
+    const [coordinates, setCoodinates] = useState({})
+    const [bounds, setBounds] = useState({})
 
     useEffect(() => {
-        getPlacesData()
-        .then((data) => {
-            console.log(data)
-            setPlaces(data)
+        navigator.geolocation.getCurrentPosition(({ coords: { latitude, longitude } }) => {
+           setCoodinates({ lat: latitude, lng: longitude })
         })
-    }, [])
+    }, []) 
+
+    useEffect(() => {
+        getPlacesData(bounds.sw, bounds.ne)
+        .then((data) => {
+            
+            setPlaces(data)
+        }).catch((error) => {
+            console.log(console.error())
+        })
+    }, [coordinates, bounds])
 
     return (
         <>
@@ -24,10 +34,14 @@ const App = () => {
             <Header/>
             <Grid container spacing={3} style={{ width: '100%'}}>
                 <Grid item xs={12} md={4}>
-                    <List />
+                    <List places={places}/>
                 </Grid>
                 <Grid item xs={12} md={8}>
-                    <Map />
+                    <Map
+                       setCoodinates={setCoodinates}
+                       setBounds={setBounds}
+                       coordinates={coordinates}
+                    />
                 </Grid>
 
             </Grid>
