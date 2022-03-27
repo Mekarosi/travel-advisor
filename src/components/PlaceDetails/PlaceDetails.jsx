@@ -7,8 +7,12 @@ import Rating from '@material-ui/lab/Rating'
 import useStyles from './styles'
 
 
-const PlaceDetails = ({ place }) => {
+const PlaceDetails = ({ place, selected, refProp }) => {
   
+   
+
+    if (selected) refProp?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
     const classes = useStyles()
 
     return (
@@ -21,13 +25,12 @@ const PlaceDetails = ({ place }) => {
             <CardContent>
                 <Typography gutterBottom variant='h5'>{place.name}</Typography>
                 <Box display='flex' justifyContent='space-between'>
-                    <Typography variant='subtitle1'>
-                       Price
-                    </Typography>
+                <Rating value={Number(place.rating)} readOnly />
                     <Typography gutterBottom variant='subtitle1'>
-                       {place.price_level}
+                       {place.num_reviews} reviews
                     </Typography>
                 </Box>
+              
                 <Box display='flex' justifyContent='space-between'>
                     <Typography variant='subtitle1'>
                        Ranking
@@ -36,9 +39,9 @@ const PlaceDetails = ({ place }) => {
                        {place.ranking}
                     </Typography>
                 </Box>
-                {place?.awards?.map((award) => (
-                     <Box my={1} display='flex' justifyContent='space-between' alignItems='center'>
-                        <img src={award.images.small} alt={award.display.name} />
+                {place?.awards?.map((award, index) => (
+                     <Box key={index} my={1} display='flex' justifyContent='space-between' alignItems='center'>
+                        <img src={award.images.small} alt={award.display_name} />
                         <Typography variant='subtitle2' color='textSecondary'>{award.display_name}</Typography> 
                      </Box>
                 ))}
