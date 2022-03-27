@@ -30,22 +30,24 @@ const App = () => {
     }, [rating])
 
     useEffect(() => {
+
+        if(bounds) {
+
         setisLoading(true)
         getPlacesData(type, bounds.sw, bounds.ne)
         .then((data) => {
             
-            setPlaces(data)
+            setPlaces(data?.filter((place) => place.name && place.num_reviews > 0))
             setFilteredPlaces([])
             setisLoading(false)
-        }).catch((error) => {
-            console.log(console.error())
         })
+    }
     }, [type, coordinates, bounds])
 
     return (
         <>
             <CssBaseline />
-            <Header/>
+            <Header setCoodinates={setCoodinates} />
             <Grid container spacing={3} style={{ width: '100%'}}>
                 <Grid item xs={12} md={4}>
                     <List 
